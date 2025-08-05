@@ -11,13 +11,13 @@ Altough, the bootloader can be built from scratch, it also contains pre-compiled
 Firstly clone this repo including its submodules with following command:
 
 ```
-git clone --recurse-submodules https://github.com/adafruit/Adafruit_nRF52_Bootloader
+git clone --recurse-submodules https://github.com/gaetanmarti/Immensive_nRF52_Bootloader.git
 ```
 
 For git versions before `2.13.0` you have to do that manually:
 ```
-git clone https://github.com/adafruit/Adafruit_nRF52_Bootloader
-cd Adafruit_nRF52_Bootloader
+git clone https://github.com/gaetanmarti/Immensive_nRF52_Bootloader.git
+cd Immensive_nRF52_Bootloader
 git submodule update --init
 ```
 
@@ -31,7 +31,7 @@ In order to compile and upload the Firmware, you need to:
 
 In order to compile the bootloader, you need to perform the following operations:
 
-1. Retrieve the code of the repository with a `git clone https://github.com/gaetanmarti/Immensive_nRF52_Bootloader.git`.
+1. Clone the repository (check corresponding section).
 
 2. Build the container for the compiler:
     ```sh
@@ -43,36 +43,55 @@ In order to compile the bootloader, you need to perform the following operations
     docker run -it -v "$(pwd):/opt/project/armgcc" arm-bootloader-compiler
     ```
 
-4. It will open the bash command-line of the container.
+4. It will open the bash command-line of the container like:
+    ```sh
+    root@5ff18c1c753b:/opt/project/armgcc#       
+    ```
+
 5. Compile the bootloader with:
     ```sh
     make BOARD=immensive_nrf52840 all
-    make BOARD=sparkfun_nrf52840_micromod all
     ```
-6. It will compile the bootloader (and further fail when trying to upload it). You can find it in `./_build/build-sparkfun_nrf52840_micromod/sparkfun_nrf52840_micromod_bootloader-0.9.2-29-g6a9a6a3-dirty_s140_6.1.1.hex`
-7. You can now upload the bootloader with J-Link. 
 
-## Create a DFU file
+6. It will compile the bootloader. You can find the `.hex` artifact in `./_build/build-immensive/immensive_nrf52840_bootloader-***GIT_TAG***_s140_6.1.1.hex`. Beware, there are several `.hex`files generated during the make process.
 
-```sh
-python3 uf2conv.py ./sparkfun_nrf52840_all_s140_6.1.1.hex -c -f 0xADA52840
-```
-## Pre-compiled binaries
+### Configuration Flags
+
+The following flags can be used to enable/disable features:
 
 | Name | Description |
 |------|-------------|
-| *sparkfun_nrf52840_all_s140_6.1.1.hex* | Origian version of the bootloader firmware for SparkFun nRF52840 with SoftDevice S140 v6.1.1 |
-| *sparkfun_nrf52840_all_s140_6.1.1.uf2* | UF2 version of the previous firmware |
-| **sparkfun_nrf52840_no_MSC_s140_6.1.1.hex** | Same as above but with deactivation of the MSC (Mass Storage Class) | 
+|`USE_MSC=1` | Enable Firmware updates via MSC (Mass Storage Class). This method opens a USB disk to update the bootloader. By defaut this feature is deactivated. |
+|`DEBUG=1`| Enable to Debug the Bootloader with the SEEGER RTT Viewer App |
 
-### Diff of `no MSC` version
+Same as above but with deactivation of the MSC (Mass Storage Class) 
 
-- tusb_config.h, line 56, `#define CFG_TUD_MSC 0`.
-- usb.c, line 306, `usb_init(true);`
+7. You can now upload the bootloader with J-Link. 
 
-!!! Note Note this is the most stable version so far!
+## Pre-compiled binaries
+
+| Name | Description | Makefile Command |
+|------|-------------|------------------|
+| nrf52840_bootloader_all-0.1.0_s140_6.1.1.hex | Origian version of the bootloader firmware with SoftDevice S140 v6.1.1 | `make BOARD=immensive_nrf52840 USE_MSC=1 all` | 
+| nrf52840_bootloader_no_MSC-0.1.0_s140_6.1.1.hex | Original version without MCS. **Use this version in production** |`make BOARD=immensive_nrf52840 USE_MSC=0 DEBUG=1 all`|
+| nrf52840_bootloader_no_MSC_DEBUG-0.1.0_s140_6.1.1.hex | Same as above but with SEGGER debugger logs.  |`make BOARD=immensive_nrf52840 USE_MSC=0 all`|
 
 ## Limitations of the current bootloader
 
-- Firmware over the air (OTA) does not currently work with the BTLE stack stuck on `[GATTS ] attr's cccd = 0x0001`.
-- Firmware may not allow to upload from Arduino depending on how it is stuck in the bluetooth stack. Use `reset` command on the serial debugger to restart the device in a mode that is not using Bluetooth.
+- Firmware over the air (OTA) update has not been tested. 
+
+## Flash memory map
+
+| Start |   End   | Description |
+|-------|---------|-------------|
+|0x00000 | 0x00AFF | MBR |
+|0x01000 | 0x25DE7 | Soft Device |
+|0x26000 | 0x3D2BB | Application |
+|0xEA000 | 0x3D2BB | Bootloader |
+|0xFD800 | 0xFD857 | Bootloader options |
+
+## External ressources
+
+- Flash [memory map](https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/hathach-memory-map).
+
+GMA 2025-08-05

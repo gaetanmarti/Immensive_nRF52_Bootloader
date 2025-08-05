@@ -4,18 +4,30 @@
 #define _PINNUM(port, pin)    ((port)*32 + (pin))
 
 /*------------------------------------------------------------------*/
-/* LED
+/* IMMENSIVE
  *------------------------------------------------------------------*/
-#define LEDS_NUMBER           1
-#define LED_PRIMARY_PIN       _PINNUM(0, 13)
-#define LED_STATE_ON          1
+
+/*  Enable Firmware updates via MSC (Mass Storage Class).
+    This method opens a USB disk to update the bootloader. 
+    Current implementation is instable.
+    By defaut USE_MSC is deactivated. */
+#ifndef USE_MSC
+    #define USE_MSC 0
+#endif
 
 /*------------------------------------------------------------------*/
-/* BUTTON
+/* LED
  *------------------------------------------------------------------*/
-#define BUTTONS_NUMBER        2
-#define BUTTON_1              _PINNUM(0, 7)
-#define BUTTON_2              _PINNUM(0, 10)
+#define LEDS_NUMBER           0
+//#define LED_PRIMARY_PIN       _PINNUM(0, 13)
+//#define LED_STATE_ON          1
+
+/*------------------------------------------------------------------*/
+/* BUTTON (No buttons are connected on the board but it is required by the bootloader)
+ *------------------------------------------------------------------*/
+#define BUTTONS_NUMBER       2
+#define BUTTON_1              _PINNUM(0, 4) // GPIO 4 - LED4 Red
+#define BUTTON_2              _PINNUM(0, 5) // GPIO 5 - LED4 Green
 #define BUTTON_PULL           NRF_GPIO_PIN_PULLUP
 
 //--------------------------------------------------------------------+

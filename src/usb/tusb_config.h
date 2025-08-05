@@ -25,6 +25,8 @@
 #ifndef _TUSB_CONFIG_H_
 #define _TUSB_CONFIG_H_
 
+#include "board.h"
+
 #ifdef __cplusplus
  extern "C" {
 #endif
@@ -53,7 +55,21 @@
 
 //------------- Class enabled -------------//
 #define CFG_TUD_CDC                 1
-#define CFG_TUD_MSC                 1
+
+#if defined(USE_MSC) && (USE_MSC == 0)
+    #define CFG_TUD_MSC                 0
+
+    // MSC constants (needed for TUD_MSC_DESCRIPTOR even when MSC is not enabled)
+    #ifndef MSC_SUBCLASS_SCSI
+        #define MSC_SUBCLASS_SCSI      6  ///< SCSI transparent command set
+    #endif
+
+    #ifndef MSC_PROTOCOL_BOT
+        #define MSC_PROTOCOL_BOT       0x50  ///< Bulk-Only Transport
+    #endif
+#else
+    #define CFG_TUD_MSC                 1
+#endif
 
 /*------------------------------------------------------------------*/
 /* CLASS DRIVER

@@ -166,6 +166,8 @@ static void disable_softdevice(void) {
   }
 }
 
+extern int SEGGER_RTT_WaitKey(void);
+
 //--------------------------------------------------------------------+
 //
 //--------------------------------------------------------------------+
@@ -179,9 +181,12 @@ int main(void) {
   // TODO move to CF2
   BOOTLOADER_VERSION_REGISTER = (MK_BOOTLOADER_VERSION);
 
+  PRINTF("Bootloader Start\r\n");
+
   board_init();
   bootloader_init();
-  PRINTF("Bootloader Start\r\n");
+  PRINTF("Board & Bootloader are initialized\r\n");
+
   led_state(STATE_BOOTLOADER_STARTED);
 
   // When updating SoftDevice, bootloader will reset before swapping SD
@@ -303,7 +308,11 @@ static void check_dfu_mode(void) {
       ble_stack_init();
     } else {
       led_state(STATE_USB_UNMOUNTED);
-      usb_init(serial_only_dfu);
+      #if defined(USE_MSC) && (USE_MSC == 0)
+        usb_init(true); // Do not use MSC
+      #else
+        usb_init(serial_only_dfu);
+      #endif
     }
 
     // Initiate an update of the firmware.
