@@ -52,8 +52,15 @@ In order to compile the bootloader, you need to perform the following operations
     ```sh
     make BOARD=immensive_nrf52840 all
     ```
+    See also chapter [Configuration Flags](#configuration-flags) .
 
 6. It will compile the bootloader. You can find the `.hex` artifact in `./_build/build-immensive/immensive_nrf52840_bootloader-***GIT_TAG***_s140_6.1.1.hex`. Beware, there are several `.hex`files generated during the make process.
+
+7. *[OPTIONNAL]* Erase the Eprom with J-Link.
+
+8. *[OPTIONNAL]* Deconnect / reconnect USB cable on the board.
+
+9. You can now upload the bootloader with J-Link. 
 
 ### Configuration Flags
 
@@ -61,20 +68,16 @@ The following flags can be used to enable/disable features:
 
 | Name | Description |
 |------|-------------|
-|`USE_MSC=1` | Enable Firmware updates via MSC (Mass Storage Class). This method opens a USB disk to update the bootloader. By defaut this feature is deactivated. |
-|`DEBUG=1`| Enable to Debug the Bootloader with the SEEGER RTT Viewer App |
+|`USE_MSC=1` | Enable Firmware updates via MSC (Mass Storage Class). This method opens a USB disk to update the bootloader. By defaut this feature is deactivated (`USE_MSC=0`). |
+|`DEBUG=1`| Enable to Debug the Bootloader with the SEEGER RTT Viewer App. **DO NOT USE. WILL PLACE BOOTLOADER AT THE EPROM ADDRESS OF THE LITTLEFS.**|
 
-Same as above but with deactivation of the MSC (Mass Storage Class) 
-
-7. You can now upload the bootloader with J-Link. 
 
 ## Pre-compiled binaries
 
 | Name | Description | Makefile Command |
 |------|-------------|------------------|
 | nrf52840_bootloader_all-0.1.0_s140_6.1.1.hex | Origian version of the bootloader firmware with SoftDevice S140 v6.1.1 | `make BOARD=immensive_nrf52840 USE_MSC=1 all` | 
-| nrf52840_bootloader_no_MSC-0.1.0_s140_6.1.1.hex | Original version without MCS. **Use this version in production** |`make BOARD=immensive_nrf52840 USE_MSC=0 DEBUG=1 all`|
-| nrf52840_bootloader_no_MSC_DEBUG-0.1.0_s140_6.1.1.hex | Same as above but with SEGGER debugger logs.  |`make BOARD=immensive_nrf52840 USE_MSC=0 all`|
+| nrf52840_bootloader_no_MSC-0.1.0_s140_6.1.1.hex | Original version without MCS. **Use this version in production** |`make BOARD=immensive_nrf52840 USE_MSC=0 all`|
 
 ## Limitations of the current bootloader
 
@@ -86,12 +89,16 @@ Same as above but with deactivation of the MSC (Mass Storage Class)
 |-------|---------|-------------|
 |0x00000 | 0x00AFF | MBR |
 |0x01000 | 0x25DE7 | Soft Device |
-|0x26000 | 0x3D2BB | Application |
-|0xEA000 | 0x3D2BB | Bootloader |
+|0x26000 | 0x3D2BB | *Application** |
+|0xED000 | 0xF3FFF | *LittleFS*** |
+|0xF4000 | 0xFB13B | Bootloader |
 |0xFD800 | 0xFD857 | Bootloader options |
+
+*This memory will be filled by the Arduino IDE
+**Will be formated at first usage of the Application
 
 ## External ressources
 
 - Flash [memory map](https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/hathach-memory-map).
 
-GMA 2025-08-05
+GMA 2025-08-06

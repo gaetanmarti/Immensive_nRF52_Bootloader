@@ -186,6 +186,7 @@ int main(void) {
   board_init();
   bootloader_init();
   PRINTF("Board & Bootloader are initialized\r\n");
+  PRINTF("GPREGRET: 0x%08lX\r\n", NRF_POWER->GPREGRET);
 
   led_state(STATE_BOOTLOADER_STARTED);
 

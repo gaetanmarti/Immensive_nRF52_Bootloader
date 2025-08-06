@@ -59,7 +59,7 @@ void usb_init(bool cdc_only) {
 
   // USB power may already be ready at this time -> no event generated
   // We need to invoke the handler based on the status initially
-  uint32_t usb_reg;
+  uint32_t usb_reg = 0; //GMA
   uint8_t sd_en = false;
 
   if (is_sd_existed()) {
@@ -81,7 +81,8 @@ void usb_init(bool cdc_only) {
     nrfx_power_usbevt_init(&config);
 
     nrfx_power_usbevt_enable();
-
+  
+    // Force update of USBREGSTATUS (if hardware is already connected)
     usb_reg = NRF_POWER->USBREGSTATUS;
   }
 
