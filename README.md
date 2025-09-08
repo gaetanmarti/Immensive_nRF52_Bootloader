@@ -76,19 +76,19 @@ The following flags can be used to enable/disable features:
 
 | Name | Description | Makefile Command |
 |------|-------------|------------------|
-| nrf52840_bootloader_all-0.1.1_s140_6.1.1.hex | Origial version of the bootloader firmware with SoftDevice S140 v6.1.1 | `make BOARD=immensive_nrf52840 USE_MSC=1 all` | 
-| nrf52840_bootloader_no_MSC-0.1.1_s140_6.1.1.hex | Original version without MCS. **Use this version in production** |`make BOARD=immensive_nrf52840 USE_MSC=0 all`|
+| nrf52840_bootloader_all-1.0.1_s140_6.1.1.hex | Origial version of the bootloader firmware with SoftDevice S140 v6.1.1 | `make BOARD=immensive_nrf52840 USE_MSC=1 all` | 
+| nrf52840_bootloader_no_MSC-1.0.1_s140_6.1.1.hex | Original version without MCS. **Use this version in production** |`make BOARD=immensive_nrf52840 USE_MSC=0 all`|
 
 ## Releases
 
 | Version | Changes |
 |---------|---------|
-| `0.1.0` | Working with electronic with no USB mux |
-| `0.1.1` | Working with electronic with USB mux. |
+| `1.0.0` | Working with electronic with no USB mux |
+| `1.0.1` | Working with electronic with USB mux. |
 
 ## Known limitations
 
-!!! Warning With version `0.1.1`, USB cable will only work on one side.
+!!! Warning With version `1.0.1`, USB cable will only work on one side.
 
 ## Flash memory map
 
