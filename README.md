@@ -31,7 +31,7 @@ In order to compile and upload the Firmware, you need to:
 
 In order to compile the bootloader, you need to perform the following operations:
 
-1. Clone the repository (check corresponding section).
+1. [Clone this repository](#cloning-this-repository).
 
 2. Build the container for the compiler:
     ```sh
@@ -68,20 +68,27 @@ The following flags can be used to enable/disable features:
 
 | Name | Description |
 |------|-------------|
-|`USE_MSC=1` | Enable Firmware updates via MSC (Mass Storage Class). This method opens a USB disk to update the bootloader. By defaut this feature is deactivated (`USE_MSC=0`). |
-|`DEBUG=1`| Enable to Debug the Bootloader with the SEEGER RTT Viewer App. **DO NOT USE. WILL PLACE BOOTLOADER AT THE EPROM ADDRESS OF THE LITTLEFS.**|
+|`USE_MSC=1` | Enable Firmware updates via MSC (Mass Storage Class). This method opens a USB disk to update the bootloader. By defaut - for security reasons - this feature is deactivated (`USE_MSC=0`). |
+|`DEBUG=1`| Enable to Debug the Bootloader with the SEEGER RTT Viewer App. **DO NOT USE BECAUSE THIS OPTION WILL PLACE THE BOOTLOADER AT THE EPROM ADDRESS OF THE LITTLEFS.**|
 
 
 ## Pre-compiled binaries
 
 | Name | Description | Makefile Command |
 |------|-------------|------------------|
-| nrf52840_bootloader_all-0.1.0_s140_6.1.1.hex | Origian version of the bootloader firmware with SoftDevice S140 v6.1.1 | `make BOARD=immensive_nrf52840 USE_MSC=1 all` | 
+| nrf52840_bootloader_all-0.1.0_s140_6.1.1.hex | Origial version of the bootloader firmware with SoftDevice S140 v6.1.1 | `make BOARD=immensive_nrf52840 USE_MSC=1 all` | 
 | nrf52840_bootloader_no_MSC-0.1.0_s140_6.1.1.hex | Original version without MCS. **Use this version in production** |`make BOARD=immensive_nrf52840 USE_MSC=0 all`|
 
-## Limitations of the current bootloader
+## Releases
 
-- Firmware over the air (OTA) update has not been tested. 
+| Version | Changes |
+|---------|---------|
+| `0.1.0` | Working with electronic with no USB mux |
+| `0.1.1` | Working with electronic with USB mux. |
+
+## Known limitations
+
+!!! Warning With version `0.1.1`, USB cable will only work on one side.
 
 ## Flash memory map
 
@@ -101,4 +108,4 @@ The following flags can be used to enable/disable features:
 
 - Flash [memory map](https://learn.adafruit.com/bluefruit-nrf52-feather-learning-guide/hathach-memory-map).
 
-GMA 2025-08-06
+GMA 2025-09-08

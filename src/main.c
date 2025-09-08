@@ -166,6 +166,32 @@ static void disable_softdevice(void) {
   }
 }
 
+// u_MX_OE = 0 -> Chip enabled = USB connected, u_MX_OE = 1 -> Chip disabled = USB disconnected
+// u_MX_S = 0 -> USB A, u_MX_S = 1 -> USB B
+
+static void set_usb_pins(void) {
+
+  const int gpioUsbNotEnabled = 6;  // (port0)(gpio43) u_MX_OE = 0 -> Chip enabled, 1 -> USB connected
+  const int gpioUsbBEnabled   = 17; // (port0)(gpio51)  u_MX_S  = 0 -> USB A,        1 -> USB B
+
+  uint32_t config = 0;
+  config |= (uint32_t) (GPIO_PIN_CNF_DIR_Output << GPIO_PIN_CNF_DIR_Pos);
+  config |= (uint32_t) (GPIO_PIN_CNF_INPUT_Disconnect << GPIO_PIN_CNF_INPUT_Pos);
+  config |= (uint32_t) (GPIO_PIN_CNF_PULL_Pulldown << GPIO_PIN_CNF_PULL_Pos);
+  config |= (uint32_t) (GPIO_PIN_CNF_DRIVE_D0S1 << GPIO_PIN_CNF_DRIVE_Pos);
+  config |= (uint32_t) (GPIO_PIN_CNF_SENSE_Disabled << GPIO_PIN_CNF_SENSE_Pos);
+
+  NRF_P0->PIN_CNF[gpioUsbNotEnabled] = config;
+  NRF_P0->PIN_CNF[gpioUsbBEnabled] = config;
+
+  NRF_P0->OUTCLR = (1UL << gpioUsbNotEnabled); // 0 -> Chip enabled
+  NRF_P0->OUTSET = (1UL << gpioUsbBEnabled);   // 1 -> USB B
+
+  // TODO: Configure USB_CC1 and USB_CC2 as analog input to know
+  // - Charge capacity of USB cable
+  // - Direction of USB data lines
+}
+
 extern int SEGGER_RTT_WaitKey(void);
 
 //--------------------------------------------------------------------+
@@ -182,6 +208,9 @@ int main(void) {
   BOOTLOADER_VERSION_REGISTER = (MK_BOOTLOADER_VERSION);
 
   PRINTF("Bootloader Start\r\n");
+
+  // GMA Set pins to enable USB
+  set_usb_pins();
 
   board_init();
   bootloader_init();
