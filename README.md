@@ -76,8 +76,8 @@ The following flags can be used to enable/disable features:
 
 | Name | Description | Makefile Command |
 |------|-------------|------------------|
-| nrf52840_bootloader_all-0.1.0_s140_6.1.1.hex | Origial version of the bootloader firmware with SoftDevice S140 v6.1.1 | `make BOARD=immensive_nrf52840 USE_MSC=1 all` | 
-| nrf52840_bootloader_no_MSC-0.1.0_s140_6.1.1.hex | Original version without MCS. **Use this version in production** |`make BOARD=immensive_nrf52840 USE_MSC=0 all`|
+| nrf52840_bootloader_all-0.1.1_s140_6.1.1.hex | Origial version of the bootloader firmware with SoftDevice S140 v6.1.1 | `make BOARD=immensive_nrf52840 USE_MSC=1 all` | 
+| nrf52840_bootloader_no_MSC-0.1.1_s140_6.1.1.hex | Original version without MCS. **Use this version in production** |`make BOARD=immensive_nrf52840 USE_MSC=0 all`|
 
 ## Releases
 
