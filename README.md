@@ -88,7 +88,8 @@ The following flags can be used to enable/disable features:
 
 ## Known limitations
 
-[!WARNING] With version `1.0.1`, USB cable will only work on one side.
+> [!WARNING]
+> With version `1.0.1`, USB cable will only work on one side.
 
 ## Flash memory map
 
